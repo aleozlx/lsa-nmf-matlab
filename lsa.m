@@ -12,9 +12,11 @@ C = [
 ];
 
 [num_words, num_documents] = size(C);
-nj = sum(C);
-ei = - sum(C ./ nj, 2) / log2(num_documents);
-W = repmat(1-ei, 1, num_documents) ./ repmat(nj, num_words, 1) .* C
+nj = sum(C); ti = sum(C, 2);
+entropy2 = (C./ti).*log2(C./ti);
+entropy2(isnan(entropy2)) = 0;
+ei = - sum(entropy2, 2) / log2(num_documents);
+W = (1-ei).*C./nj
 
 % (b)
 [U, S, V] = svd(W, 'econ')
